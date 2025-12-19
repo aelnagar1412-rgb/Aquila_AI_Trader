@@ -1,62 +1,55 @@
 import time
 import json
-import os
-from telegram import send_signal
+import random
+import requests
 
-SETTINGS_PATH = os.path.join(os.path.dirname(__file__), "..", "settings.json")
-
+SETTINGS_FILE = "../settings.json"
 
 def load_settings():
-    with open(SETTINGS_PATH, "r") as f:
+    with open(SETTINGS_FILE, "r") as f:
         return json.load(f)
 
+def send_signal(pair, timeframe, direction):
+    print(f"📢 Signal | {pair} | {timeframe} | {direction}")
 
-def analyze_market(pair, timeframe):
+def calculate_signal(pair):
     """
-    تحليل تجريبي (placeholder)
-    هيتبدل بعدين باستراتيجية حقيقية
+    PLACEHOLDER for real market data
+    Strategy Logic Applied
     """
-    import random
-    return random.choice(["BUY", "SELL", None])
 
+    ema_50 = random.uniform(1.0, 2.0)
+    ema_200 = random.uniform(1.0, 2.0)
+    rsi = random.randint(30, 70)
 
-def run_engine():
-    print("🚀 Aquila Engine Started")
+    if ema_50 > ema_200 and 40 <= rsi <= 55:
+        return "CALL"
 
-    while True:
-        settings = load_settings()
+    if ema_50 < ema_200 and 45 <= rsi <= 60:
+        return "PUT"
 
-        if not settings.get("enabled", False):
-            print("⏸ Bot Disabled - waiting...")
-            time.sleep(5)
-            continue
+    return None
 
-        timeframe = settings.get("timeframe", "1m")
-        pairs = settings.get("pairs", [])
+print("🚀 Aquila Engine Started")
 
-        print("✅ Bot Enabled")
-        print(f"⏱ Timeframe: {timeframe}")
-        print(f"📊 Pairs: {pairs}")
+while True:
+    settings = load_settings()
 
-        for pair in pairs:
-            signal_type = analyze_market(pair, timeframe)
-
-            if signal_type:
-                signal = {
-                    "pair": pair,
-                    "timeframe": timeframe,
-                    "signal": signal_type
-                }
-
-                print(
-                    f"📢 SIGNAL → {signal_type} | {pair} | {timeframe}"
-                )
-                send_signal(signal)
-
-            time.sleep(1)
-
+    if not settings.get("enabled"):
+        print("⏸ Bot Disabled - waiting...")
         time.sleep(5)
+        continue
 
+    timeframe = settings.get("timeframe", "1m")
+    pairs = settings.get("pairs", [])
 
-if __name__ == "__main__":
-    run_engine()
+    print("✅ Bot Enabled")
+    print("⏱ Timeframe:", timeframe)
+    print("💱 Pairs:", pairs)
+
+    for pair in pairs:
+        signal = calculate_signal(pair)
+        if signal:
+            send_signal(pair, timeframe, signal)
+
+    time.sleep(60)

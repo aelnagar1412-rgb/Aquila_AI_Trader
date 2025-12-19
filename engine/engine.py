@@ -1,9 +1,11 @@
 import time
 import json
 import random
-import requests
 
 SETTINGS_FILE = "../settings.json"
+COOLDOWN_SECONDS = 180  # 3 minutes per pair
+
+last_signal_time = {}
 
 def load_settings():
     with open(SETTINGS_FILE, "r") as f:
@@ -14,10 +16,8 @@ def send_signal(pair, timeframe, direction):
 
 def calculate_signal(pair):
     """
-    PLACEHOLDER for real market data
-    Strategy Logic Applied
+    Strategy Logic (EMA + RSI simulation for now)
     """
-
     ema_50 = random.uniform(1.0, 2.0)
     ema_200 = random.uniform(1.0, 2.0)
     rsi = random.randint(30, 70)
@@ -47,9 +47,18 @@ while True:
     print("⏱ Timeframe:", timeframe)
     print("💱 Pairs:", pairs)
 
+    now = time.time()
+
     for pair in pairs:
+        last_time = last_signal_time.get(pair, 0)
+
+        # Cooldown check
+        if now - last_time < COOLDOWN_SECONDS:
+            continue
+
         signal = calculate_signal(pair)
         if signal:
             send_signal(pair, timeframe, signal)
+            last_signal_time[pair] = now
 
     time.sleep(60)

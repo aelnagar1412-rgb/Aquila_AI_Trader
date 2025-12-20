@@ -3,10 +3,10 @@ Description=Aquila Engine
 After=network.target
 
 [Service]
-User=root
 WorkingDirectory=/root/aquila-dashboard/engine
 ExecStart=/usr/bin/python3 engine.py
 Restart=always
+User=root
 
 [Install]
 WantedBy=multi-user.target

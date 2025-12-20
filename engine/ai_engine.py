@@ -1,20 +1,29 @@
-def ai_decision(trend, momentum, volatility):
-    score = 0
+from datetime import datetime
+import pytz
 
-    if trend == "UP":
-        score += 40
-    elif trend == "DOWN":
-        score += 40
+EGYPT = pytz.timezone("Africa/Cairo")
 
-    if momentum == "STRONG":
-        score += 35
+def ai_decision(data):
+    trend = data["trend"]
+    rsi = data["rsi"]
+    confirm = data["confirmation"]
 
-    if volatility == "NORMAL":
-        score += 25
+    if not confirm:
+        return None
 
-    confidence = min(score, 100)
-
-    if confidence >= 75:
-        return True, confidence
+    if trend == "BUY" and rsi < 40:
+        direction = "BUY"
+    elif trend == "SELL" and rsi > 60:
+        direction = "SELL"
     else:
-        return False, confidence
+        return None
+
+    now = datetime.now(EGYPT).strftime("%H:%M:%S")
+
+    return {
+        "pair": data["pair"],
+        "direction": direction,
+        "timeframe": data["timeframe"],
+        "rsi": rsi,
+        "time": now
+    }

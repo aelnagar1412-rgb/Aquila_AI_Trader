@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Aquila Dashboard</title>
+</head>
+<body>
+
+<h2>🤖 Aquila AI Trader – Control Panel</h2>
+
+<p>Status:
+<b>{{ "🟢 ON" if settings.enabled else "🔴 OFF" }}</b>
+</p>
+
+<p>Timeframe: {{ settings.timeframe }}</p>
+<p>Pairs: {{ settings.pairs }}</p>
+
+<a href="/start"><button>▶️ Start Bot</button></a>
+<a href="/stop"><button>⛔ Stop Bot</button></a>
+<a href="/logout"><button>Logout</button></a>
+
+</body>
+</html>

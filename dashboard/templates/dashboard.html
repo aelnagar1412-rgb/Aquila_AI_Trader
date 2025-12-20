@@ -1,42 +1,12 @@
-<!DOCTYPE html>
-<html lang="ar">
-<head>
-    <meta charset="UTF-8">
-    <title>Aquila Dashboard</title>
-    <link rel="stylesheet" href="/static/style.css">
-</head>
-<body>
+<h2>🤖 Aquila AI Trader</h2>
 
-<h1>🦅 Aquila AI Dashboard</h1>
+<div class="card">
+  <p>Status: {{ "🟢 ON" if enabled else "🔴 OFF" }}</p>
+  <p>Timeframe: {{ timeframe }}</p>
+  <p>Pairs: {{ pairs }}</p>
 
-<p>🕒 الوقت (مصر): {{ time }}</p>
-
-<h2>📊 الإشارات المعتمدة</h2>
-
-{% if signals %}
-<table>
-    <tr>
-        <th>الزوج</th>
-        <th>الاتجاه</th>
-        <th>الثقة</th>
-        <th>الفريم</th>
-        <th>السبب</th>
-        <th>الوقت</th>
-    </tr>
-    {% for s in signals %}
-    <tr>
-        <td>{{ s.pair }}</td>
-        <td>{{ s.direction }}</td>
-        <td>{{ s.confidence }}%</td>
-        <td>{{ s.timeframe }}</td>
-        <td>{{ s.reason }}</td>
-        <td>{{ s.time }}</td>
-    </tr>
-    {% endfor %}
-</table>
-{% else %}
-<p>❌ لا توجد فرص حالياً</p>
-{% endif %}
-
-</body>
-</html>
+  <form method="post">
+    <button name="action" value="start" class="btn btn-on">Start</button>
+    <button name="action" value="stop" class="btn btn-off">Stop</button>
+  </form>
+</div>

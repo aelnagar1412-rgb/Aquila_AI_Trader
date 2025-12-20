@@ -1,12 +1,31 @@
-<h2>🤖 Aquila AI Trader</h2>
+<h2>🤖 Aquila AI Control Panel</h2>
 
-<div class="card">
-  <p>Status: {{ "🟢 ON" if enabled else "🔴 OFF" }}</p>
-  <p>Timeframe: {{ timeframe }}</p>
-  <p>Pairs: {{ pairs }}</p>
+<form method="POST">
 
-  <form method="post">
-    <button name="action" value="start" class="btn btn-on">Start</button>
-    <button name="action" value="stop" class="btn btn-off">Stop</button>
-  </form>
-</div>
+  <label>
+    <input type="checkbox" name="enabled" {% if settings.enabled %}checked{% endif %}>
+    Bot Enabled
+  </label><br><br>
+
+  Timeframe:
+  <input name="timeframe" value="{{ settings.timeframe }}"><br><br>
+
+  Pairs:
+  <input name="pairs" value="{{ settings.pairs | join(',') }}"><br><br>
+
+  Strategy:
+  <select name="strategy">
+    <option value="AI_TREND_RSI">AI Trend + RSI</option>
+    <option value="AI_CONFIRMATION">AI Confirmation</option>
+  </select><br><br>
+
+  Risk:
+  <select name="risk">
+    <option value="low">Low</option>
+    <option value="medium" selected>Medium</option>
+    <option value="high">High</option>
+  </select><br><br>
+
+  <button type="submit">💾 Save</button>
+
+</form>

@@ -1,6 +1,5 @@
 {
   "enabled": true,
   "timeframe": "1m",
-  "pairs": ["EURUSD", "EURJPY", "EURGBP", "AUDCAD", "USDJPY"],
-  "last_signal": "EURUSD ⬆️ BUY (1m)"
+  "pairs": ["EURUSD", "EURJPY", "EURGBP", "AUDCAD", "USDJPY"]
 }

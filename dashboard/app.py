@@ -1,93 +1,48 @@
-from flask import Flask, render_template, redirect, url_for, session, request
+from flask import Flask, render_template, redirect
 from datetime import datetime
-import pytz
 import json
-import os
 
-app = Flask(__name__)
-app.secret_key = "AQUILA_SECRET_KEY_CHANGE_ME"
+app = Flask(
+    __name__,
+    template_folder="templates",
+    static_folder="../static"
+)
 
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-SETTINGS_FILE = os.path.join(BASE_DIR, "../settings.json")
-USERS_FILE = os.path.join(BASE_DIR, "../users.json")
-
-# --------------------
-# Helpers
-# --------------------
 def load_settings():
-    with open(SETTINGS_FILE, "r") as f:
+    with open("../settings.json", "r") as f:
         return json.load(f)
 
-def load_users():
-    with open(USERS_FILE, "r") as f:
-        return json.load(f)
-
-def egypt_time():
-    return datetime.now(pytz.timezone("Africa/Cairo")).strftime("%H:%M:%S %d-%m-%Y")
-
-# --------------------
-# Auth
-# --------------------
-@app.route("/login", methods=["GET", "POST"])
-def login():
-    if request.method == "POST":
-        users = load_users()
-        username = request.form.get("username")
-        password = request.form.get("password")
-
-        if username in users and users[username]["password"] == password:
-            session["user"] = username
-            return redirect(url_for("dashboard"))
-
-        return render_template("login.html", error="بيانات الدخول غير صحيحة")
-
-    return render_template("login.html")
-
-@app.route("/logout")
-def logout():
-    session.pop("user", None)
-    return redirect(url_for("login"))
-
-# --------------------
-# Dashboard
-# --------------------
 @app.route("/")
 def dashboard():
-    if "user" not in session:
-        return redirect(url_for("login"))
-
     settings = load_settings()
-
     return render_template(
         "dashboard.html",
-        time=egypt_time(),
+        time=datetime.now().strftime("%H:%M:%S %d-%m-%Y"),
         status=settings.get("enabled", False),
         timeframe=settings.get("timeframe", "1m"),
         pairs=settings.get("pairs", []),
-        signal=settings.get("last_signal", None)
+        signal=settings.get("last_signal")
     )
 
-# --------------------
-# Start / Stop Bot
-# --------------------
 @app.route("/start")
-def start_bot():
+def start():
     settings = load_settings()
     settings["enabled"] = True
-    with open(SETTINGS_FILE, "w") as f:
-        json.dump(settings, f, indent=2)
-    return redirect(url_for("dashboard"))
+    with open("../settings.json", "w") as f:
+        json.dump(settings, f, indent=4)
+    return redirect("/")
 
 @app.route("/stop")
-def stop_bot():
+def stop():
     settings = load_settings()
     settings["enabled"] = False
-    with open(SETTINGS_FILE, "w") as f:
-        json.dump(settings, f, indent=2)
-    return redirect(url_for("dashboard"))
+    with open("../settings.json", "w") as f:
+        json.dump(settings, f, indent=4)
+    return redirect("/")
 
-# --------------------
-# Run
-# --------------------
+@app.route("/logout")
+def logout():
+    return "Logged out"
+
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000)

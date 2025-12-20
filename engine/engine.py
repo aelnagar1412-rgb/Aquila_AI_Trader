@@ -1,70 +1,29 @@
-# ai_engine.py
-# Aquila AI Decision Engine
+import json
+import time
+import os
 
-from datetime import datetime
-import pytz
+SETTINGS_FILE = "/root/aquila-dashboard/settings.json"
 
+def load_settings():
+    with open(SETTINGS_FILE, "r") as f:
+        return json.load(f)
 
-CONFIDENCE_THRESHOLD = 75  # أقل نسبة ثقة مسموحة
+print("🚀 Aquila Engine Started")
 
+while True:
+    settings = load_settings()
 
-def ai_decision(
-    trend: str,
-    momentum: str,
-    volatility: str,
-    time_bias: str = "NORMAL"
-):
-    """
-    ترجع:
-    (decision: bool, confidence: int, reason: str)
-    """
+    if not settings["enabled"]:
+        print("⏸ Bot Disabled - waiting...")
+        time.sleep(5)
+        continue
 
-    score = 0
-    reasons = []
+    tf = settings["timeframe"]
+    pairs = settings["pairs"]
 
-    # Trend
-    if trend == "UP":
-        score += 30
-        reasons.append("الاتجاه صاعد")
-    elif trend == "DOWN":
-        score += 30
-        reasons.append("الاتجاه هابط")
-    else:
-        reasons.append("الاتجاه غير واضح")
+    print("✅ Bot Enabled")
+    print("⏱ Timeframe:", tf)
+    print("💱 Pairs:", pairs)
 
-    # Momentum
-    if momentum == "STRONG":
-        score += 30
-        reasons.append("الزخم قوي")
-    elif momentum == "WEAK":
-        score += 10
-        reasons.append("الزخم ضعيف")
-
-    # Volatility
-    if volatility == "NORMAL":
-        score += 25
-        reasons.append("التذبذب مناسب")
-    elif volatility == "HIGH":
-        score += 10
-        reasons.append("التذبذب عالي")
-
-    # Time Bias
-    if time_bias == "GOOD":
-        score += 15
-        reasons.append("التوقيت مناسب")
-    else:
-        reasons.append("التوقيت عادي")
-
-    confidence = min(score, 100)
-
-    if confidence >= CONFIDENCE_THRESHOLD:
-        decision = True
-    else:
-        decision = False
-
-    return decision, confidence, " + ".join(reasons)
-
-
-def egypt_time():
-    tz = pytz.timezone("Africa/Cairo")
-    return datetime.now(tz).strftime("%Y-%m-%d %H:%M:%S")
+    # هنا لاحقًا هنحط الاستراتيجية
+    time.sleep(60)

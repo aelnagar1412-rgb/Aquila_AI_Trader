@@ -3,94 +3,54 @@
 <head>
     <meta charset="UTF-8">
     <title>Aquila AI Dashboard</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background: #0f172a;
-            color: #e5e7eb;
-            margin: 0;
-            padding: 15px;
-        }
-
-        h1 {
-            text-align: center;
-            color: #38bdf8;
-            margin-bottom: 20px;
-        }
-
-        .card {
-            background: #020617;
-            border-radius: 12px;
-            padding: 15px;
-            margin-bottom: 15px;
-            box-shadow: 0 0 15px rgba(56,189,248,0.15);
-        }
-
-        .title {
-            font-size: 14px;
-            color: #94a3b8;
-            margin-bottom: 5px;
-        }
-
-        .value {
-            font-size: 18px;
-            font-weight: bold;
-        }
-
-        .on {
-            color: #22c55e;
-        }
-
-        .off {
-            color: #ef4444;
-        }
-
-        .signal {
-            font-size: 20px;
-            margin-top: 10px;
-        }
-
-        .footer {
-            text-align: center;
-            font-size: 12px;
-            color: #64748b;
-            margin-top: 20px;
-        }
-    </style>
+    <link rel="stylesheet" href="/static/style.css">
 </head>
-
 <body>
 
+<div class="container">
     <h1>🦅 Aquila AI Dashboard</h1>
 
-    <div class="card">
-        <div class="title">🕒 الوقت (مصر)</div>
-        <div class="value">{{ time }}</div>
+    <div class="card time">
+        ⏰ الوقت (مصر): <strong>{{ time }}</strong>
     </div>
 
-    <div class="card">
-        <div class="title">⚙️ حالة البوت</div>
+    <div class="card status {{ 'on' if status else 'off' }}">
+        🤖 حالة البوت:
         {% if status %}
-            <div class="value on">● ON</div>
+            <span>ON</span>
         {% else %}
-            <div class="value off">● OFF</div>
+            <span>OFF</span>
         {% endif %}
     </div>
 
     <div class="card">
-        <div class="title">📊 الإشارة الحالية</div>
+        ⏱ الفريم الزمني: <strong>{{ timeframe }}</strong>
+    </div>
+
+    <div class="card">
+        💱 الأزواج:
+        <ul>
+            {% for pair in pairs %}
+                <li>{{ pair }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+
+    <div class="card signal">
+        📊 آخر إشارة:
         {% if signal %}
-            <div class="signal">{{ signal }}</div>
+            <strong>{{ signal }}</strong>
         {% else %}
-            <div class="value off">لا توجد فرص حالياً</div>
+            لا توجد إشارة حالياً ❌
         {% endif %}
     </div>
 
-    <div class="footer">
-        Aquila AI Trader © 2025
+    <div class="actions">
+        <a href="/start" class="btn start">▶ Start Bot</a>
+        <a href="/stop" class="btn stop">⛔ Stop Bot</a>
+        <a href="/logout" class="btn logout">🚪 Logout</a>
     </div>
+</div>
 
 </body>
 </html>

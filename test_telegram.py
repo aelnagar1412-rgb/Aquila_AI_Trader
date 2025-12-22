@@ -1,16 +1,18 @@
+import asyncio
 from telegram import Bot
 from datetime import datetime
 import pytz
 
 TOKEN = "8536113760:AAH5trng6DFqHnOnjnqEaE-3_WpXjYZnXik"
-CHAT_ID = "818760257"  # هنملأها بعد خطوة بسيطة
+CHAT_ID = 818760257  # ← حط الـ chat_id هنا
 
-bot = Bot(token=TOKEN)
+async def main():
+    bot = Bot(token=TOKEN)
 
-egypt_tz = pytz.timezone("Africa/Cairo")
-now = datetime.now(egypt_tz).strftime("%H:%M")
+    egypt_tz = pytz.timezone("Africa/Cairo")
+    now = datetime.now(egypt_tz).strftime("%H:%M")
 
-message = f"""
+    message = f"""
 🦅 Aquila AI — رسالة اختبار
 
 📊 السوق: الفوركس
@@ -27,4 +29,7 @@ message = f"""
 ⚠️ تداول يدوي — اختبار النظام فقط
 """
 
-bot.send_message(chat_id=CHAT_ID, text=message)
+    await bot.send_message(chat_id=CHAT_ID, text=message)
+
+if __name__ == "__main__":
+    asyncio.run(main())
